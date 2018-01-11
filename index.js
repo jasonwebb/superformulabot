@@ -1,21 +1,15 @@
-var twitPackage = require('twit');
-// var twit = new Twit({
-//     consumer_key:        '',
-//     consumer_secret:     '',
-//     access_token:        '',
-//     access_token_secret: '',
-//     timeout_mis:         60*1000
-// });
-
-// var stream = twit.stream('user');
+var twit = require('twit');
+// var T = new Twit(require('./config.js'));
+// var stream = T.stream('user');
 // var tweet;
 
 var fs = require('fs');
 var exec = require('child_process').exec;
 
-// var processingPath = 'processing-3.3.6-linux64/processing-java';
-var processingPath = '"processing-3.3.6-win64/processing-java.exe"';
+// var processingPath = 'processing_3.3.6_linux64/processing-java';
+var processingPath = '"processing_3.3.6_win64/processing-java.exe"';
 var sketchPath = '../superformula_generator_sketch';
+var params = {};
 
 // Extend the Number prototype to include a Processing-like map function
 // - See this response from August Miller - https://stackoverflow.com/a/23202637
@@ -28,11 +22,10 @@ Number.prototype.map = function (in_min, in_max, out_min, out_max) {
 
 tweeter('DATE');
 
-// Generate and tweet a new image every hour
+// Generate and tweet a new image every hour, +/- 10 minutes or so
 // setInterval(tweeter('DATE'), 1000*60*60);
 
 function tweeter(mode) {
-    var params;
 
     // Obtain parameters either based on current datetime or Tweet
     switch(mode) {
@@ -91,19 +84,22 @@ function getParamsFromDate() {
     var params = {};
 
     var today  = new Date();
-    var day    = today.getDate() + 1;   // [0-6] + 1
-    var month  = today.getMonth() + 1;  // [0-11] + 1
+    var day    = today.getDate();       // [0-6] + 1
+    var month  = today.getMonth();      // [0-11] + 1
     var year   = today.getFullYear();   // [1000-9999]
     var hour   = today.getHours();      // [0-23]
     var minute = today.getMinutes();    // [0-59]
     var second = today.getSeconds();    // [0-59]
 
-    params.a = 1;
-    params.b = 1;
+    params.a = day.map(1, 31, 1.0, 8.0).toFixed(2);
+    params.b = month.map(0, 11, 1.0, 8.0).toFixed(2);
     params.m = parseInt(hour.map(0, 59, 1, 20));
-    params.n1 = hour.map(0, 23, .01, 20.0).toFixed(2);
+    params.n1 = hour.map(0, 23, .01, 40.0).toFixed(2);
     params.n2 = minute.map(0, 59, .01, 20.0).toFixed(2);
     params.n3 = second.map(0, 59, .01, 40.0).toFixed(2);
+
+    params.iterations = Math.floor(Math.random() * 9 + 1);
+    params.decay = params.iterations.map(1, 10, .05, .2).toFixed(3);
 
     // Set color scheme based on current hour of the day
     if(hour > 6 && hour < 20) {
@@ -123,28 +119,21 @@ function getParamsAsArgs(params) {
     var paramString;
 
     if(typeof params != "undefined") {
-        paramString = '';
+        paramString = params.a + ' ';
+        paramString += params.b + ' ';
 
-        // 'a' is optional
-        if(typeof params.a != "undefined") {
-            paramString += params.a + ' ';
-        }
+        paramString += params.m + ' ';
+        paramString += params.n1 + ' ';
+        paramString += params.n2 + ' ';
+        paramString += params.n3 + ' ';
 
-        // 'b' is optional
-        if(typeof params.b != "undefined") {
-            paramString += params.b + ' ';
-        }
+        paramString += params.iterations + ' ';
+        paramString += params.decay + ' ';
 
-        paramString += params.m;
-        paramString += ' ' + params.n1;
-        paramString += ' ' + params.n2;
-        paramString += ' ' + params.n3;
-
-        // 'invert' is optional
-        if(typeof params.invert != "undefined") {
-            if(params.invert == true) {
-                paramString += ' true';
-            }
+        if(params.invert == true) {
+            paramString += 'true';
+        } else {
+            paramString += 'false';
         }
 
         return paramString;
@@ -160,32 +149,23 @@ function getParamsAsArgs(params) {
 function getParamsAsString() {
     var paramString;
 
-    paramString += '[';
+    paramString = '[';
 
-    // 'a' is optional
-    if(typeof params.a != "undefined") {
-        paramString += 'a:' + a + ' ';;
-    }
+    paramString += 'a:' + params.a + ' ';
+    paramString += 'b:' + params.b + ' ';
 
-    // 'b' is optional
-    if(typeof params.b != "undefined") {
-        paramString += 'b:' + b + ' ';
-    }
+    paramString += 'm:' + params.m + ' ';
+    paramString += 'n1:' + params.n1 + ' ';
+    paramString += 'n2:' + params.n2 + ' ';
+    paramString += 'n3:' + params.n3 + ' ';
 
-    paramString += 'm:' + m + ' ';
-    paramString += 'n1:' + n1 + ' ';
-    paramString += 'n2:' + n2 + ' ';
-    paramString += 'n3:' + n3 + ' ';
+    paramString += 'iterations:' + params.iterations + ' ';
+    paramString += 'decay:' + params.decay + ' ';
 
-    // 'invert' is optional, and must be resolved to string
-    if(typeof params.invert != "undefined") {
-        paramString += 'invert:';
-
-        if(params.invert) {
-            paramString += 'true';
-        } else {
-            paramString += 'false';
-        }
+    if(params.invert) {
+        paramString += 'invert:true';
+    } else {
+        paramString += 'invert:false';
     }
 
     paramString += ']';
