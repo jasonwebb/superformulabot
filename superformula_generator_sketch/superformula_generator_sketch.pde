@@ -28,23 +28,25 @@ void setup() {
     
   // Randomize parameters when not in CLI mode
   } else {
-    a = random(0.01, 4.0);
-    b = random(0.01, 4.0);
-    m = random(0.0, 40.0);
-    n1 = random(0.01, 20.0);
+    a = random(0.01, 8.0);
+    b = random(0.01, 8.0);
+    m = random(0.01, 20.0);
+    n1 = random(0.01, 40.0);
     n2 = random(0.01, 20.0);
-    n3 = random(0.01, 5.0);
+    n3 = random(0.01, 40.0);
     iterations = int(random(1,10));
     decay = map(iterations, 1, 10, .05, .2);
     invert = false;
+    
+    println(a + " " + b + " " + m + " " + n1 + " " + n2 + " " + n3 + " " + iterations + " " + decay + " " + invert);
     
     cli_mode = false;
   }
   
   // Set up color palette based on 'invert' arg
-  if(invert) {
+  if(!invert) {
     background(20);
-    stroke(255,200);
+    stroke(255,135);
   } else {
     background(245);
     stroke(0,135);
@@ -54,17 +56,26 @@ void setup() {
   translate(width/2, height/2);
   
   for(int i=iterations; i>0; i--) {
-    // Get all vertices for shape
     largestRadius = 0;
     PVector[] points = superformula(a - i*decay, b - i*decay, m, n1 - i*decay, n2 - i*decay, n3 - i*decay);
     
-    beginShape();      
+    beginShape();
+      curveVertex(
+        map(points[points.length-1].x, 0, largestRadius, 0, height/2 - padding), 
+        map(points[points.length-1].y, 0, largestRadius, 0, height/2 - padding)
+      );
+      
       for(int j=0; j<points.length; j++) {
         curveVertex(
           map(points[j].x, 0, largestRadius, 0, height/2 - padding), 
           map(points[j].y, 0, largestRadius, 0, height/2 - padding)
         );
       }
+      
+      curveVertex(
+        map(points[0].x, 0, largestRadius, 0, height/2 - padding), 
+        map(points[0].y, 0, largestRadius, 0, height/2 - padding)
+      );
     endShape();
   }
   
