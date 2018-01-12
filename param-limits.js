@@ -13,22 +13,22 @@ module.exports = {
     },
     n1: {
         min: .01,
-        max: 20.0
+        max: 40.0
     },
     n2: {
         min: .01,
-        max: 20.0
+        max: 40.0
     },
     n3: {
         min: .01,
-        max: 5.0
+        max: 40.0
     },
     iterations: {
         min: 1,
         max: 10
     },
     decay: {
-        min: .75,
-        max: 1
+        min: .05,
+        max: .2
     }
 }
