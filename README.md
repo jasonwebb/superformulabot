@@ -1,6 +1,6 @@
     Bot is currently OFFLINE while initial development is being done.
 
-[Superformulabot](https://twitter.com/superformulabot) is a generative art Twitter bot by [Jason Webb](http://jasonwebb.io) that shares drawings created using the 2D [superformula](https://en.wikipedia.org/wiki/Superformula) equation.
+[Superformulabot](https://twitter.com/superformulabotd) is a generative art Twitter bot by [Jason Webb](http://jasonwebb.io) that shares drawings created using the 2D [superformula](https://en.wikipedia.org/wiki/Superformula) equation.
 
 Once per hour at a randomized time a new drawing is generated and shared based on the current timestamp. 
 
@@ -12,17 +12,17 @@ Anyone can request a specific drawing be made for them by @mentioning the bot wi
 
 All parameters are optional, and will default to values in the following table - feel free to provide as many or as few as you'd like!
 
-| Parameter | Type    | Description | Range | Default |
-|---        |---      |---          |---    |---      |
-| `a`       | float   |             | 0.01 - 8.0 |
-| `b`       | float   |             | 0.01 - 8.0 |
-| `m`       | float   | Degree of rotational symmetry | 1.0 - 20.0 |
-| `n1`      | float   | Affects convexity/concavity of edges, resulting 'bloated' or 'pinched' shapes            | 0.01 - 40.0 |
-| `n2`      | float   | Similar to n1 | 0.01 - 40.0 |
-| `n3`      | float   | Similar to n2 | 0.01 - 40.0 |
-| `iterations` | int  | Number of concentric drawings | 1 - 10 | Random in range |
-| `decay`   | float   | Amount of change to parameters per iteration | 0.05 - 0.2 | `iterations` mapped to range |
-| `invert`  | boolean | Invert colors | - | false |
+| Parameter | Type      | Description | Range | Default |
+|---        |---        |---          |---    |---      |
+| `a`       | _float_   |             | 0.01 - 8.0 |
+| `b`       | _float_   |             | 0.01 - 8.0 |
+| `m`       | _float_   | Degree of rotational symmetry | 1.0 - 20.0 |
+| `n1`      | _float_   | Affects convexity/concavity of edges, resulting in 'bloated' or 'pinched' shapes            | 0.01 - 40.0 |
+| `n2`      | _float_   | Similar to n1 | 0.01 - 40.0 |
+| `n3`      | _float_   | Similar to n2 | 0.01 - 40.0 |
+| `iterations` | _int_  | Number of concentric drawings | 1 - 10 | Random in range |
+| `decay`   | _float_   | Amount of change to parameters per iteration | 0.05 - 0.2 | `iterations` mapped to range |
+| `invert`  | _boolean_ | Invert colors | - | false |
 
 ## Examples
 

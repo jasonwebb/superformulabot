@@ -44,9 +44,9 @@ void setup() {
   }
   
   // Set up color palette based on 'invert' arg
-  if(!invert) {
+  if(invert) {
     background(20);
-    stroke(255,135);
+    stroke(255,150);
   } else {
     background(245);
     stroke(0,135);
