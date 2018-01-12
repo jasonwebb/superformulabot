@@ -7,6 +7,7 @@ Once per hour at a randomized time a new drawing is generated and shared based o
 Anyone can request a specific drawing be made for them by @mentioning the bot with a message containing a well-formed parameter string. The bot will reply with the interpreted parameters and the render drawing, or an error message describing what went wrong.
 
 ## Usage 
+To request a custom drawing from the bot, __@mention__ it in a tweet containing a list of parameters in the format of `[... {key}:{value} ...]`. For example:
 
     @superformulabot [a:# b:# m:# n1:# n2:# n3:# iterations:# decay:# invert:#]
 
