@@ -1,8 +1,10 @@
-var twit = require('twit');
-// var T = new Twit(require('./config.js'));
-// var stream = T.stream('user');
-// var tweet;
+// Packages and vars for Twitter
+var Twit = require('twit');
+var T = new Twit(require('./config.js'));
+var stream = T.stream('user');
+var tweet;
 
+// Packages for working with server OS
 var fs = require('fs');
 var exec = require('child_process').exec;
 
@@ -33,7 +35,7 @@ function tweeter(mode) {
             params = getParamsFromDate();
             break;
         case 'REPLY':
-            // params = getParamsFromTweet();
+            params = getParamsFromTweet();
 
             // if(params == -1) {
             //     // No parameters found - reply with error and guide image
@@ -178,8 +180,10 @@ function getParamsAsString() {
 //  since tweeter() can't handle it directly.
 //=========================================================================
 function captureTweet(tweet) {
-    tweet = tweet;
-    tweeter();
+    if(tweet.in_reply_to_screen_name) {
+        tweet = tweet;
+        tweeter('REPLY');
+    }
 }
 
 function getParamsFromTweet() {
