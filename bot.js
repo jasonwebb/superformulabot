@@ -145,15 +145,15 @@ function getParamsFromDate() {
     var minute = today.getMinutes();    // [0-59]
     var second = today.getSeconds();    // [0-59]
 
-    params.a  = day.map(1, 31, 1.0, 8.0).toFixed(2);
-    params.b  = month.map(0, 11, 1.0, 8.0).toFixed(2);
-    params.m  = parseInt(hour.map(0, 59, 1, 20));
-    params.n1 = hour.map(0, 23, .01, 40.0).toFixed(2);
-    params.n2 = minute.map(0, 59, .01, 20.0).toFixed(2);
-    params.n3 = second.map(0, 59, .01, 40.0).toFixed(2);
+    params.a  = day.map(1, 31, paramLimits.a.min, paramLimits.a.max).toFixed(2);
+    params.b  = month.map(0, 11, paramLimits.b.min, paramLimits.b.max).toFixed(2);
+    params.m  = hour.map(0, 59, paramLimits.m.min, paramLimits.m.max).toFixed(2);
+    params.n1 = hour.map(0, 23, paramLimits.n1.min, paramLimits.n1.max).toFixed(2);
+    params.n2 = minute.map(0, 59, paramLimits.n2.min, paramLimits.n2.max).toFixed(2);
+    params.n3 = second.map(0, 59, paramLimits.n3.min, paramLimits.n3.max).toFixed(2);
 
-    params.iterations = Math.floor(Math.random() * 9 + 1);
-    params.decay = params.iterations.map(1, 10, .05, .2).toFixed(3);
+    params.iterations = parseInt(random(paramLimits.iterations.min, paramLimits.iterations.max));
+    params.decay      = random(paramLimits.decay.min, paramLimits.decay.max).toFixed(2);
 
     // Set color scheme based on current hour of the day
     if(hour > 6 && hour < 20) {
