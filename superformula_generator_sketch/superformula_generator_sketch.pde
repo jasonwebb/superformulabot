@@ -7,7 +7,7 @@ boolean cli_mode = true;
 
 void setup() {
   // Set canvas size to maximum size for 'expanded' image format on Twitter
-  size(800,800);
+  size(1024,512);
   
   // Set up 2D rendering environmental settings
   smooth();
