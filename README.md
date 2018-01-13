@@ -45,4 +45,5 @@ All __@mentions__ that do not include at least an empty parameter set (`[]`) wil
 
 ## References
 * [Daniel Shiffman's Programming A-Z course](http://shiffman.net/a2z/twitter-bots/)
+* [Scott Spencer's Twitter Bot Playground guide](https://spences10.gitbooks.io/twitter-bot-playground/content/)
 * [Paul Bourke's article on effects of parameters](http://paulbourke.net/geometry/supershape/)
