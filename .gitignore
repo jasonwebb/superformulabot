@@ -1,5 +1,5 @@
 # Heavy or confidential project files
-config.js
+.env
 processing_3.3.6_linux32/
 processing_3.3.6_linux64/
 processing_3.3.6_win64/
