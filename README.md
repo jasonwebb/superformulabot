@@ -41,7 +41,7 @@ All __@mentions__ that do not include at least an empty parameter set (`[]`) wil
 * [Node.js](https://nodejs.org)
 * [Twit](https://github.com/ttezel/twit)
 * [Processing 3.3.6](https://processing.org/) via [CLI](https://github.com/processing/processing/wiki/Command-Line) - _not included in this repo for size reasons_
-* [Zeit](https://zeit.co) via [now](https://www.npmjs.com/package/now)
+* [Amazon EC2](https://aws.amazon.com/ec2/)
 
 ## References
 * [Daniel Shiffman's Programming A-Z course](http://shiffman.net/a2z/twitter-bots/)
