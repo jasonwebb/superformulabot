@@ -1,21 +1,10 @@
 {
   "name": "superformulabot",
   "version": "1.0.0",
-  "description": "A Twitter bot for generating and sharing images using the Superformula equation.",
+  "description": "A Twitter bot for generating and sharing images using the superformula equation.",
   "main": "bot.js",
   "scripts": {
-    "start": "node bot.js",
-    "deploy": "now -e CONSUMER_KEY=@sb-twit-key -e CONSUMER_SECRET=@sb-twit-secret -e ACCESS_TOKEN=@sb-twit-access -e ACCESS_TOKEN_SECRET=@sb-twit-access-secret"
-  },
-  "now": {
-    "alias": "superformulabot",
-    "files": [
-      "processing_3.3.6_linux64",
-      "bot.js",
-      "config.js",
-      "param-defaults.js",
-      "param-limits.js"
-    ]
+    "start": "node bot.js"
   },
   "author": "Jason Webb (http://jasonwebb.io)",
   "homepage": "https://github.com/jasonwebb/superformulabot",
@@ -28,9 +17,7 @@
   "devDependencies": {
   },
   "dependencies": {
-    "now": "^9.0.1",
     "twit": "^2.2.9",
-    "winston": "^2.4.0",
-    "dotenv": "^4.0.0"
+    "winston": "^2.4.0"
   }
 }
