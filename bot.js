@@ -7,14 +7,12 @@ var tweet;
 // Packages for working with server OS
 var fs = require('fs');
 var exec = require('child_process').exec;
-var os = require('os');
-var tempDir = os.tmpdir();
 
 // Logging via Winston - https://github.com/winstonjs/winston
 var winston = require('winston');
 winston.loggers.add('transports', {
     file: {
-        filename: tempDir + '/activity.log'
+        filename: 'activity.log'
     },
     console: {
         colorize: true
@@ -24,7 +22,9 @@ winston.loggers.add('transports', {
 // Variables for working with Processing sketch
 var processingPath = 'processing_3.3.6_linux64/processing-java';
 // var processingPath = '"processing_3.3.6_win64/processing-java.exe"';
-var sketchPath = '../superformula_generator_sketch';
+// var sketchPath = '/superformula_generator_sketch';   // Windows 10 location
+var sketchPath = '/home/ubuntu/superformula_generator_sketch';  // Ubuntu AWS EC2
+var outputImagePath = '/home/ubuntu/superformula_generator_sketch/superformula_output.jpg';
 var params = {};
 var paramDefaults = require('./param-defaults.js');
 var paramLimits = require('./param-limits.js');
@@ -70,9 +70,6 @@ function tweeter(mode) {
             break;
     }
 
-    // Add temp dir to params for deployment
-    params.tempDir = tempDir;
-
     // Convert params object into string for to pass to Processing sketch via CLI
     var paramString = getParamsAsArgs(params);
 
@@ -86,13 +83,13 @@ function tweeter(mode) {
     function generatorDoneHandler(err, stdout, stderr) {
         if(err) {
             winston.error('exec() failed: ' + err);
-            console.log("Params: " + paramString);
-            console.log("Tried writing to " + tempDir);
+            console.log("stdout: " + stdout);
+            console.log("stderr: " + stderr);
             process.exit(1);
         }
 
         var paramString = getParamsAsString();
-        var image = fs.readFileSync(tempDir + '/superformula_output.jpg', { encoding: 'base64' } );
+        var image = fs.readFileSync(outputImagePath, { encoding: 'base64' } );
         var status;
         
         // Create appropriate status text
@@ -197,12 +194,10 @@ function getParamsAsArgs(params) {
         paramString += params.decay + ' ';
 
         if(params.invert == true) {
-            paramString += 'true ';
+            paramString += 'true';
         } else {
-            paramString += 'false ';
+            paramString += 'false';
         }
-
-        paramString += params.tempDir;
 
         return paramString;
     }
