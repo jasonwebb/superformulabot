@@ -3,7 +3,6 @@ int iterations;
 float largestRadius = 0;
 int padding = 40;
 boolean invert = false;
-String tempDir;
 boolean cli_mode = true; 
 
 void setup() {
@@ -26,7 +25,6 @@ void setup() {
     iterations = int(args[6]);
     decay = float(args[7]);
     invert = boolean(args[8]);
-    tempDir = args[9];
     
   // Randomize parameters when not in CLI mode
   } else {
@@ -39,7 +37,6 @@ void setup() {
     iterations = int(random(1,10));
     decay = map(iterations, 1, 10, .05, .2);
     invert = false;
-    tempDir = "";
     
     println(a + " " + b + " " + m + " " + n1 + " " + n2 + " " + n3 + " " + iterations + " " + decay + " " + invert);
     
@@ -83,7 +80,7 @@ void setup() {
   }
   
   // Save the generated image to the OS's temp directory (provided explicitly by bot.js via CLI)
-  save(tempDir + "/superformula_output.jpg");
+  save("./superformula_output.jpg");
     
   // Exit Processing to free up resources
   if(cli_mode) {
