@@ -1,11 +1,14 @@
 # Heavy or confidential project files
-.env
+config.js
 processing_3.3.6_linux32/
 processing_3.3.6_linux64/
 processing_3.3.6_win64/
 
 # Dependency directories
 node_modules/
+
+# Other
+npm-debug.log
 
 ### Windows ###
 # Windows thumbnail cache files
