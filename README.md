@@ -6,6 +6,8 @@ Once per hour (+/- up to 15min) a new drawing is automatically generated and twe
 
 Anyone can request a specific drawing be made for them by @mentioning the bot with a message containing a set of parameters (see [Usage](#usage)). The bot will generate a new drawing using the provided parameters, using randomized values for any that are not provided, then reply to the user with the drawing.
 
+If you'd like to play around with the superformula in real-time and see the effects of all the parameters, check out this interactive [Superformula Explorer](https://bl.ocks.org/mbostock/1021103) by Mike Bostock/Christophe Viau.
+
 ## Usage 
 To request a custom drawing from the bot, __@mention__ it in a tweet containing a list of parameters in the format of `[... {key}:{value} ...]`. For example:
 
@@ -13,12 +15,11 @@ To request a custom drawing from the bot, __@mention__ it in a tweet containing 
 
 All parameters are optional and will be randomized within the ranges below if they are not explicitly provided. Provide as many or as few as you'd like!
 
-* If no parameters are provided (`[]`), or if anything other than valid key/value pairs are provided (e.g `[schwifty]`), all parameters will be randomized within the ranges below. 
-* If a mix of valid parameters and non-valid parameters are provided (e.g. `[m:10 schwifty]`), all non-valid parameters will be randomized.
+* All provided parameters will be automatically clamped to the ranges listed below to limit abuse.
+* If no parameters are provided (`[]`), or if anything other than a set of valid key/value pairs are provided (e.g `[schwifty]`), all parameters will be randomized within the ranges below. 
+* If a mix of valid parameters and non-valid parameters are provided (e.g. `[m:10 schwifty]`), all valid parameters will be used and all non-valid parameters will be randomized within the ranges below.
 
 All __@mentions__ that do not include at least an empty parameter set (`[]`) will be silently ignored so that you can talk about the bot without triggering it.
-
-You can rapidly find interesting forms and parameters using an interactive tool like this [Superformula Explorer](https://bl.ocks.org/mbostock/1021103) by Mike Bostock.
 
 
 | Parameter | Type      | Description | Range |

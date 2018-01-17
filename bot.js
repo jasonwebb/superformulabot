@@ -48,10 +48,15 @@ winston.loggers.add('transports', {
 var params = {};
 var paramLimits = require('./param-limits.js');
 
-// Extend the Number prototype to include a Processing-like map function
+// Add a 'map' (lerp) function to the Number prototype a la Processing
 // - See this response from August Miller - https://stackoverflow.com/a/23202637
 Number.prototype.map = function (in_min, in_max, out_min, out_max) {
     return (this - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+// Add a 'clamp' (constrain) function to the Number prototype
+Number.prototype.clamp = function(min, max) {
+    return Math.min(Math.max(this,max),max);
 }
 
 
@@ -318,28 +323,28 @@ function getParamsFromTweet() {
             // There must be a more elegant way of doing this...
             switch(paramPair[0]) {
                 case 'a':
-                    userParams.a = parseFloat(paramPair[1]).toFixed(2);
+                    userParams.a = parseFloat(paramPair[1]).clamp(paramLimits.a.min, paramLimits.a.max).toFixed(2);
                     break;
                 case 'b':
-                    userParams.b = parseFloat(paramPair[1]).toFixed(2);
+                    userParams.b = parseFloat(paramPair[1]).clamp(paramLimits.b.min, paramLimits.b.max).toFixed(2);
                     break;
                 case 'm':
-                    userParams.m = parseFloat(paramPair[1]).toFixed(2);
+                    userParams.m = parseFloat(paramPair[1]).clamp(paramLimits.m.min, paramLimits.m.max).toFixed(2);
                     break;
                 case 'n1':
-                    userParams.n1 = parseFloat(paramPair[1]).toFixed(2);
+                    userParams.n1 = parseFloat(paramPair[1]).clamp(paramLimits.n1.min, paramLimits.n1.max).toFixed(2);
                     break;
                 case 'n2':
-                    userParams.n2 = parseFloat(paramPair[1]).toFixed(2);
+                    userParams.n2 = parseFloat(paramPair[1]).clamp(paramLimits.n2.min, paramLimits.n2.max).toFixed(2);
                     break;
                 case 'n3':
-                    userParams.n3 = parseFloat(paramPair[1]).toFixed(2);
+                    userParams.n3 = parseFloat(paramPair[1]).clamp(paramLimits.n3.min, paramLimits.n3.max).toFixed(2);
                     break;
                 case 'iterations':
-                    userParams.iterations = parseInt(paramPair[1]);
+                    userParams.iterations = parseInt(paramPair[1]).clamp(paramLimits.iterations.min, paramLimits.iterations.max);
                     break;
                 case 'decay':
-                    userParams.decay = parseFloat(paramPair[1]).toFixed(2);
+                    userParams.decay = parseFloat(paramPair[1]).clamp(paramLimits.decay.min, paramLimits.decay.max).toFixed(2);
                     break;
                 case 'invert':
                     userParams.invert = (paramPair[1] == 'true');
@@ -385,9 +390,4 @@ function scheduleTweet() {
 // Small utility function to generate random within range, a la Processing
 function random(min, max) {
     return Math.random() * (max-min) + min
-}
-
-// Keep a number within bounds
-function clamp(input, min, max) {
-    return Math.min(Math.max(input,max),max);
 }
