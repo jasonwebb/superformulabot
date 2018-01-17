@@ -8,29 +8,52 @@ var tweet;
 var fs = require('fs');
 var exec = require('child_process').exec;
 
+// Environment-specific path variables
+var paths = {
+    'processing': {
+        'win': '"processing_3.3.6_win64/processing-java.exe"',
+        'linux64': 'processing_3.3.6_linux64/processing-java'
+    },
+    'sketch': {
+        'win': '../superformula_generator_sketch',
+        'linux64': process.cwd() + '/superformula_generator_sketch'
+    },
+    'outputImage': {
+        'win': 'superformula_generator_sketch/superformula_output.jpg',
+        'linux64': process.cwd() + '/superformula_generator_sketch/superformula_output.jpg'
+    },
+    'log': {
+        'win': 'activity.log',
+        'linux64': process.cwd() + '/activity.log'
+    }
+}
+
+// Set working paths to Win by default for easier dev
+var processingPath = paths.processing.win;
+var sketchPath = paths.sketch.win;
+var outputImagePath = paths.outputImage.win;
+var logFilePath = paths.log.win;
+
+// Switch to linux64 paths when ENV=PROD environment variable is passed (see 'deploy' script in package.json)
+if(typeof process.env.ENV != 'undefined' && process.env.ENV == 'PROD') {
+    processingPath = paths.processing.linux64;
+    sketchPath = paths.sketch.linux64;
+    outputImagePath = paths.outputImage.linux64;
+    logFilePath = paths.log.linux64;
+}
+
 // Logging via Winston - https://github.com/winstonjs/winston
 var winston = require('winston');
 winston.loggers.add('transports', {
     file: {
-        filename: 'activity.log'
+        filename: logFilePath
     },
     console: {
         colorize: true
     }
 });
 
-// Variables for working with Processing sketch
-var processingPathWin   = '"processing_3.3.6_win64/processing-java.exe"';
-var processingPathLinux = 'processing_3.3.6_linux64/processing-java';
-var sketchPathWin   = 'superformula_generator_sketch';
-var sketchPathLinux = '/home/ubuntu/superformula_generator_sketch';
-var outputImagePathWin   = sketchPathWin + '/superformula_output.jpg';
-var outputImagePathLinux = '/home/ubuntu/superformula_generator_sketch/superformula_output.jpg';
-
-var processingPath  = processingPathLinux;
-var sketchPath      = sketchPathLinux;
-var outputImagePath = outputImagePathLinux;
-
+// Superformula parameters and defaults
 var params = {};
 var paramDefaults = require('./param-defaults.js');
 var paramLimits = require('./param-limits.js');
@@ -45,7 +68,6 @@ Number.prototype.map = function (in_min, in_max, out_min, out_max) {
 //====================================================================================================
 //  TRIGGERS
 //====================================================================================================
-
 // Manually kickoff a new tweet at startup
 tweeter('DATE');
 
@@ -56,7 +78,6 @@ stream.on('tweet', captureTweet);
 // Schedule a DATE tweet for one hour from now, +/- 15 minutes
 var scheduledTime = scheduleTweet();
 winston.info('SCHEDULED tweet for ' + scheduledTime/60/1000 + ' minutes from now.');
-
 //====================================================================================================
 
 
@@ -84,8 +105,11 @@ function tweeter(mode) {
     var paramString = getParamsAsArgs(params);
 
     // Construct the CLI command to run Processing
-    // var cmd = processingPath + ' --sketch=' + sketchPath + ' --run ' + paramString;  // for local Win dev
-    var cmd = 'xvfb-run ' + processingPath + ' --sketch=' + sketchPath + ' --run ' + paramString;
+    var cmd = processingPath + ' --sketch=' + sketchPath + ' --run ' + paramString;
+
+    if(typeof process.env.ENV != 'undefined' && process.env.ENV == 'PROD') {
+        cmd = 'xvfb-run ' + processingPath + ' --sketch=' + sketchPath + ' --run ' + paramString;
+    }
 
     // Run the Processing sketch, call function in the second parameter as callback
     exec(cmd, generatorDoneHandler);
@@ -96,7 +120,7 @@ function tweeter(mode) {
             winston.error('exec() failed: ' + err);
             console.log("stdout: " + stdout);
             console.log("stderr: " + stderr);
-            process.exit(1);
+            return;
         }
 
         var paramString = getParamsAsString();
@@ -172,15 +196,19 @@ function getParamsFromDate() {
     var second = today.getSeconds();    // [0-59]
 
     params.a  = day.map(1, 31, paramLimits.a.min, paramLimits.a.max).toFixed(2);
-    params.b = params.a;
-    // params.b  = month.map(0, 11, paramLimits.b.min, paramLimits.b.max).toFixed(2);
-    params.m  = hour.map(0, 23, paramLimits.m.min, paramLimits.m.max).toFixed(2);
+    params.b  = month.map(0, 11, paramLimits.b.min, paramLimits.b.max).toFixed(2);
+    params.m  = parseInt(hour.map(0, 23, paramLimits.m.min, paramLimits.m.max));
     params.n1 = hour.map(0, 23, paramLimits.n1.min, paramLimits.n1.max).toFixed(2);
     params.n2 = minute.map(0, 59, paramLimits.n2.min, paramLimits.n2.max).toFixed(2);
     params.n3 = second.map(0, 59, paramLimits.n3.min, paramLimits.n3.max).toFixed(2);
 
     params.iterations = parseInt(random(paramLimits.iterations.min, paramLimits.iterations.max));
     params.decay      = random(paramLimits.decay.min, paramLimits.decay.max).toFixed(2);
+
+    // Ensure that m is an even integer for closed (prettier) paths
+    if(params.m % 2 != 0) {
+        params.m += 1;
+    }
 
     // Set color scheme based on current hour of the day
     if(hour > 6 && hour < 20) {
@@ -332,14 +360,18 @@ function getParamsFromTweet() {
     // Empty [] string supplied, so generate randomized values
     } else if(!Array.isArray(userParamArray)) {
         userParams.a = random(paramLimits.a.min, paramLimits.a.max).toFixed(2);
-        userParams.b = userParams.a;
-        // userParams.b = random(paramLimits.b.min, paramLimits.b.max).toFixed(2);
-        userParams.m = random(paramLimits.m.min, paramLimits.m.max).toFixed(2);
+        userParams.b = random(paramLimits.b.min, paramLimits.b.max).toFixed(2);
+        userParams.m = parseInt(random(paramLimits.m.min, paramLimits.m.max));
         userParams.n1 = random(paramLimits.n1.min, paramLimits.n1.max).toFixed(2);
         userParams.n2 = random(paramLimits.n2.min, paramLimits.n2.max).toFixed(2);
         userParams.n3 = random(paramLimits.n3.min, paramLimits.n2.max).toFixed(2);
         userParams.iterations = parseInt(random(paramLimits.iterations.min, paramLimits.iterations.max));
         userParams.decay = random(paramLimits.decay.min, paramLimits.decay.max).toFixed(2);
+
+        // Ensure that m is an even integer for closed (prettier) paths
+        if(userParams.m % 2 != 0) {
+            userParams.m += 1;
+        }
 
         winston.info('@' + tweet.user.screen_name + ' provided empty param string. Using random params.');
     }
@@ -355,9 +387,9 @@ function getParamsFromTweet() {
 //=========================================================================
 function scheduleTweet() {
     var ONE_HOUR = 1000*60*60;
-    var timeOffset = ONE_HOUR + 1000*60*parseInt(random(-15,15));  // between -15 and 15 minutes
+    var timeOffset = ONE_HOUR + 1000*60*parseInt(random(-15,15));
 
-    setInterval(tweeter, timeOffset, 'INTERVAL');   // run the script every hour within 15 minutes (+/-)
+    setTimeout(tweeter, timeOffset, 'INTERVAL');
 
     return timeOffset;
 }

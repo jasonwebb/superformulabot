@@ -5,7 +5,7 @@
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js",
-    "deploy": "nodejs bot.js"
+    "deploy": "ENV=PROD nodejs bot.js"
   },
   "author": "Jason Webb (http://jasonwebb.io)",
   "homepage": "https://github.com/jasonwebb/superformulabot",
