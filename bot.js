@@ -29,17 +29,17 @@ var paths = {
 }
 
 // Set working paths to Win by default for easier dev
-var processingPath = paths.processing.win;
-var sketchPath = paths.sketch.win;
+var processingPath  = paths.processing.win;
+var sketchPath      = paths.sketch.win;
 var outputImagePath = paths.outputImage.win;
-var logFilePath = paths.log.win;
+var logFilePath     = paths.log.win;
 
 // Switch to linux64 paths when ENV=PROD environment variable is passed (see 'deploy' script in package.json)
 if(typeof process.env.ENV != 'undefined' && process.env.ENV == 'PROD') {
-    processingPath = paths.processing.linux64;
-    sketchPath = paths.sketch.linux64;
+    processingPath  = paths.processing.linux64;
+    sketchPath      = paths.sketch.linux64;
     outputImagePath = paths.outputImage.linux64;
-    logFilePath = paths.log.linux64;
+    logFilePath     = paths.log.linux64;
 }
 
 // Logging via Winston - https://github.com/winstonjs/winston
@@ -53,9 +53,8 @@ winston.loggers.add('transports', {
     }
 });
 
-// Superformula parameters and defaults
+// Superformula parameters and limits
 var params = {};
-var paramDefaults = require('./param-defaults.js');
 var paramLimits = require('./param-limits.js');
 
 // Extend the Number prototype to include a Processing-like map function
@@ -356,28 +355,25 @@ function getParamsFromTweet() {
                     break;   
             }
         });
+    }
 
-    // Empty [] string supplied, so generate randomized values
-    } else if(!Array.isArray(userParamArray)) {
-        userParams.a = random(paramLimits.a.min, paramLimits.a.max).toFixed(2);
-        userParams.b = random(paramLimits.b.min, paramLimits.b.max).toFixed(2);
-        userParams.m = parseInt(random(paramLimits.m.min, paramLimits.m.max));
-        userParams.n1 = random(paramLimits.n1.min, paramLimits.n1.max).toFixed(2);
-        userParams.n2 = random(paramLimits.n2.min, paramLimits.n2.max).toFixed(2);
-        userParams.n3 = random(paramLimits.n3.min, paramLimits.n2.max).toFixed(2);
-        userParams.iterations = parseInt(random(paramLimits.iterations.min, paramLimits.iterations.max));
-        userParams.decay = random(paramLimits.decay.min, paramLimits.decay.max).toFixed(2);
+    var randomParams = {};
+    randomParams.a = random(paramLimits.a.min, paramLimits.a.max).toFixed(2);
+    randomParams.b = random(paramLimits.b.min, paramLimits.b.max).toFixed(2);
+    randomParams.m = parseInt(random(paramLimits.m.min, paramLimits.m.max));
+    randomParams.n1 = random(paramLimits.n1.min, paramLimits.n1.max).toFixed(2);
+    randomParams.n2 = random(paramLimits.n2.min, paramLimits.n2.max).toFixed(2);
+    randomParams.n3 = random(paramLimits.n3.min, paramLimits.n2.max).toFixed(2);
+    randomParams.iterations = parseInt(random(paramLimits.iterations.min, paramLimits.iterations.max));
+    randomParams.decay = random(paramLimits.decay.min, paramLimits.decay.max).toFixed(2);
 
-        // Ensure that m is an even integer for closed (prettier) paths
-        if(userParams.m % 2 != 0) {
-            userParams.m += 1;
-        }
-
-        winston.info('@' + tweet.user.screen_name + ' provided empty param string. Using random params.');
+    // Ensure that m is an even integer for closed (prettier) paths
+    if(randomParams.m % 2 != 0) {
+        randomParams.m += 1;
     }
 
     // Merge defaults with any users' params (or randomized params)
-    var params = Object.assign({}, paramDefaults, userParams);
+    var params = Object.assign({}, randomParams, userParams);
 
     return params;
 }
