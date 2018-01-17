@@ -1,6 +1,6 @@
     Bot is currently OFFLINE while initial development is being done.
 
-[Superformulabot](https://twitter.com/superformulabot) is a generative art Twitter bot by [Jason Webb](http://jasonwebb.io) that shares drawings created using the 2D [superformula](https://en.wikipedia.org/wiki/Superformula) equation.
+__[@superformulabot](https://twitter.com/superformulabot)__ is a generative art Twitter bot by [Jason Webb](http://jasonwebb.io) that shares drawings created using the 2D [superformula](https://en.wikipedia.org/wiki/Superformula) equation.
 
 Once per hour at a randomized time a new drawing is generated and shared based on the current timestamp. 
 
@@ -45,5 +45,6 @@ All __@mentions__ that do not include at least an empty parameter set (`[]`) wil
 
 ## References
 * [Daniel Shiffman's Programming A-Z course](http://shiffman.net/a2z/twitter-bots/)
+* [Running Processing without a display wiki page](https://github.com/processing/processing/wiki/Running-without-a-Display)
 * [Scott Spencer's Twitter Bot Playground guide](https://spences10.gitbooks.io/twitter-bot-playground/content/)
-* [Paul Bourke's article on effects of parameters](http://paulbourke.net/geometry/supershape/)
+* [Paul Bourke's article on effects of superformula parameters](http://paulbourke.net/geometry/supershape/)
