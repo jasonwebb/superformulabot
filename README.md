@@ -2,18 +2,20 @@
 
 __[@superformulabot](https://twitter.com/superformulabot)__ is a generative art Twitter bot by [Jason Webb](http://jasonwebb.io) that shares drawings created using the 2D [superformula](https://en.wikipedia.org/wiki/Superformula) equation.
 
-Once per hour at a randomized time a new drawing is generated and shared based on the current timestamp. 
+Once per hour (+/- up to 0-15min) a new drawing is automatically generated and tweeted based using the current timestamp as parameters. 
 
-Anyone can request a specific drawing be made for them by @mentioning the bot with a message containing a well-formed parameter string. The bot will reply with the interpreted parameters and the render drawing, or an error message describing what went wrong.
+Anyone can request a specific drawing be made for them by @mentioning the bot with a message containing a set of parameters (see [Usage](#usage)). The bot will generate a new drawing using the provided parameters, using randomized values for any that are not provided, then reply to the user with the drawing.
 
 ## Usage 
 To request a custom drawing from the bot, __@mention__ it in a tweet containing a list of parameters in the format of `[... {key}:{value} ...]`. For example:
 
     @superformulabot [a:# b:# m:# n1:# n2:# n3:# iterations:# decay:# invert:#]
 
-All parameters are optional, and will default to values in the following table. Provide as many or as few as you'd like!
+All parameters are optional and will default to values in the following table. Provide as many or as few as you'd like!
 
-If no parameters are provided (`[]`), or if anything other than valid key:value pairs are provided (e.g `[schwifty]`), all parameters will be randomized within the ranges below.
+You can rapidly find interesting forms and parameters using an interactive tool like this [Superformula Explorer](https://bl.ocks.org/mbostock/1021103) by Mike Bostock.
+
+If no parameters are provided (`[]`), or if anything other than valid key/value pairs are provided (e.g `[schwifty]`), all parameters will be randomized within the ranges below.
 
 All __@mentions__ that do not include at least an empty parameter set (`[]`) will be silently ignored so that you can talk about the bot without triggering it.
 
@@ -21,7 +23,7 @@ All __@mentions__ that do not include at least an empty parameter set (`[]`) wil
 |---        |---        |---          |---    |---      |
 | `a`       | _float_   | Lateral stretch amount | 0.01 - 8.0 | 4.0 |
 | `b`       | _float_   | Vertical stretch amount | 0.01 - 8.0 | 4.0 |
-| `m`       | _float_   | Degree of rotational symmetry | 1.0 - 20.0 | 10.0 |
+| `m`       | _float_   | Degree of rotational symmetry<br>_Positive even integers result in closed shapes, but are not required._<br>_When randomized, m will be rounded up to nearest even integer._  | 1.0 - 20.0 | 10 |
 | `n1`      | _float_   | Affects convexity/concavity of edges, resulting in 'bloated' or 'pinched' shapes | 0.01 - 40.0 | 20.0 |
 | `n2`      | _float_   | Similar to n1 | 0.01 - 40.0 | 20.0 |
 | `n3`      | _float_   | Similar to n2 | 0.01 - 40.0 | 20.0 |
