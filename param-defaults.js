@@ -6,6 +6,6 @@ module.exports = {
     n2: 20.0,
     n3: 20.0,
     iterations: 5,
-    decay: .7,
+    decay: .075,
     invert: false
 }

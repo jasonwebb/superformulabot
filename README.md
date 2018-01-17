@@ -28,7 +28,7 @@ All __@mentions__ that do not include at least an empty parameter set (`[]`) wil
 | `n2`      | _float_   | Similar to n1 | 0.01 - 40.0 | 20.0 |
 | `n3`      | _float_   | Similar to n2 | 0.01 - 40.0 | 20.0 |
 | `iterations` | _int_  | Number of concentric drawings | 1 - 10 | 5 |
-| `decay`   | _float_   | Amount of negative change to all parameters per iteration | 0.05 - 0.2 | 0.7 |
+| `decay`   | _float_   | Amount of negative change to all parameters per iteration | 0.05 - 0.2 | 0.075 |
 | `invert`  | _boolean_ | Invert colors | true\|false | false |
 
 ## Examples
