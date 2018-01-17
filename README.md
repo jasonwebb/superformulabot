@@ -23,7 +23,7 @@ All __@mentions__ that do not include at least an empty parameter set (`[]`) wil
 |---        |---        |---          |---    |---      |
 | `a`       | _float_   | Lateral stretch amount | 0.01 - 8.0 | 4.0 |
 | `b`       | _float_   | Vertical stretch amount | 0.01 - 8.0 | 4.0 |
-| `m`       | _float_   | Degree of rotational symmetry<br>_Positive even integers result in closed shapes, but are not required._<br>_When randomized, m will be rounded up to nearest even integer._  | 1.0 - 20.0 | 10 |
+| `m`       | _float_   | Degree of rotational symmetry<br>_- Positive even integers result in closed shapes, but are not required._<br>_- When randomized, m will be rounded up to nearest even integer._  | 1.0 - 20.0 | 10 |
 | `n1`      | _float_   | Affects convexity/concavity of edges, resulting in 'bloated' or 'pinched' shapes | 0.01 - 40.0 | 20.0 |
 | `n2`      | _float_   | Similar to n1 | 0.01 - 40.0 | 20.0 |
 | `n3`      | _float_   | Similar to n2 | 0.01 - 40.0 | 20.0 |
