@@ -21,10 +21,6 @@ var paths = {
     'outputImage': {
         'win': 'superformula_generator_sketch/superformula_output.jpg',
         'linux64': process.cwd() + '/superformula_generator_sketch/superformula_output.jpg'
-    },
-    'log': {
-        'win': 'activity.log',
-        'linux64': process.cwd() + '/activity.log'
     }
 }
 
@@ -32,22 +28,17 @@ var paths = {
 var processingPath  = paths.processing.win;
 var sketchPath      = paths.sketch.win;
 var outputImagePath = paths.outputImage.win;
-var logFilePath     = paths.log.win;
 
 // Switch to linux64 paths when ENV=PROD environment variable is passed (see 'deploy' script in package.json)
 if(typeof process.env.ENV != 'undefined' && process.env.ENV == 'PROD') {
     processingPath  = paths.processing.linux64;
     sketchPath      = paths.sketch.linux64;
     outputImagePath = paths.outputImage.linux64;
-    logFilePath     = paths.log.linux64;
 }
 
 // Logging via Winston - https://github.com/winstonjs/winston
 var winston = require('winston');
 winston.loggers.add('transports', {
-    file: {
-        filename: logFilePath
-    },
     console: {
         colorize: true
     }
@@ -117,8 +108,8 @@ function tweeter(mode) {
     function generatorDoneHandler(err, stdout, stderr) {
         if(err) {
             winston.error('exec() failed: ' + err);
-            console.log("stdout: " + stdout);
-            console.log("stderr: " + stderr);
+            winston.info("stdout: " + stdout);
+            winston.info("stderr: " + stderr);
             return;
         }
 

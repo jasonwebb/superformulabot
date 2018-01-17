@@ -41,9 +41,23 @@ You can rapidly find interesting forms and parameters using an interactive tool 
 | `@superformulabot [a:3.0 m:5 n2:3]` | All parameters not provided are randomized (except invert) |
 | `@superformulabot []` or `@superformulabot [scwifty]` | All parameters are randomized (except invert) |
 
+## Continuous running with forever
+This script is run continuously on an EC2 instance using forever, invoked like so:
+
+    forever -o activity.log -e error.log -c "npm run deploy" start bot.js
+
+You can find out if the script is still running at any point in the future by using:
+
+    forever list
+
+And stop the script using:
+
+    forever stopall
+
 ## Technologies used
 * [Node.js](https://nodejs.org)
 * [Twit](https://github.com/ttezel/twit)
+* [forever](https://github.com/foreverjs/forever)
 * [Processing 3.3.6](https://processing.org/) via [CLI](https://github.com/processing/processing/wiki/Command-Line) - _not included in this repo for size reasons_
 * [Amazon EC2](https://aws.amazon.com/ec2/)
 
