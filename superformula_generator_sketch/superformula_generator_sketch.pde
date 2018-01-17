@@ -30,13 +30,18 @@ void setup() {
   } else {
     a = random(0.01, 8.0);
     b = random(0.01, 8.0);
-    m = random(0.01, 20.0);
+    m = (int)random(1, 20);
     n1 = random(0.01, 40.0);
     n2 = random(0.01, 20.0);
     n3 = random(0.01, 40.0);
-    iterations = int(random(1,10));
+    iterations = (int)random(1,10);
     decay = map(iterations, 1, 10, .05, .2);
     invert = false;
+    
+    // Make sure m is even to make all paths closed
+    if(m % 2 != 0) {
+      m += 1;
+    }
     
     println(a + " " + b + " " + m + " " + n1 + " " + n2 + " " + n3 + " " + iterations + " " + decay + " " + invert);
     
