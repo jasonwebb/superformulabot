@@ -84,7 +84,8 @@ function tweeter(mode) {
     var paramString = getParamsAsArgs(params);
 
     // Construct the CLI command to run Processing
-    var cmd = processingPath + ' --sketch=' + sketchPath + ' --run ' + paramString;
+    // var cmd = processingPath + ' --sketch=' + sketchPath + ' --run ' + paramString;  // for local Win dev
+    var cmd = 'xvfb-run ' + processingPath + ' --sketch=' + sketchPath + ' --run ' + paramString;
 
     // Run the Processing sketch, call function in the second parameter as callback
     exec(cmd, generatorDoneHandler);
@@ -349,16 +350,9 @@ function getParamsFromTweet() {
     return params;
 }
 
-
-// Small utility function to generate random within range, a la Processing
-function random(min, max) {
-    return Math.random() * (max-min) + min
-}
-
-function clamp(input, min, max) {
-    return Math.min(Math.max(input,max),max);
-}
-
+//=========================================================================
+//  Schedule a new tweet in about an hour (+/- 15min)
+//=========================================================================
 function scheduleTweet() {
     var ONE_HOUR = 1000*60*60;
     var timeOffset = ONE_HOUR + 1000*60*parseInt(random(-15,15));  // between -15 and 15 minutes
@@ -366,4 +360,15 @@ function scheduleTweet() {
     setInterval(tweeter, timeOffset, 'INTERVAL');   // run the script every hour within 15 minutes (+/-)
 
     return timeOffset;
+}
+
+
+// Small utility function to generate random within range, a la Processing
+function random(min, max) {
+    return Math.random() * (max-min) + min
+}
+
+// Keep a number within bounds
+function clamp(input, min, max) {
+    return Math.min(Math.max(input,max),max);
 }
