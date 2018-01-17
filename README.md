@@ -1,6 +1,6 @@
     Bot is currently OFFLINE while initial development is being done.
 
-__[@superformulabot](https://twitter.com/superformulabot)__ is a generative art Twitter bot by [Jason Webb](http://jasonwebb.io) that shares drawings created using the 2D [superformula](https://en.wikipedia.org/wiki/Superformula) equation.
+__[@superformulabot](https://twitter.com/superformulabot)__ is a generative art Twitter bot by [Jason Webb](https://twitter.com/jasonwebb) that shares drawings created using the 2D [superformula](https://en.wikipedia.org/wiki/Superformula) equation.
 
 Once per hour (+/- up to 0-15min) a new drawing is automatically generated and tweeted based using the current timestamp as parameters. 
 
