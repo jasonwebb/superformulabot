@@ -4,7 +4,8 @@
   "description": "A Twitter bot for generating and sharing images using the superformula equation.",
   "main": "bot.js",
   "scripts": {
-    "start": "node bot.js"
+    "start": "node bot.js",
+    "deploy": "nodejs bot.js"
   },
   "author": "Jason Webb (http://jasonwebb.io)",
   "homepage": "https://github.com/jasonwebb/superformulabot",
@@ -14,8 +15,6 @@
     "url": "https://github.com/jasonwebb/superformulabot.git"
   },
   "license": "ISC",
-  "devDependencies": {
-  },
   "dependencies": {
     "twit": "^2.2.9",
     "winston": "^2.4.0"
