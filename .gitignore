@@ -3,6 +3,7 @@ config.js
 processing_3.3.6_linux32/
 processing_3.3.6_linux64/
 processing_3.3.6_win64/
+superformula_output.jpg
 
 # Dependency directories
 node_modules/
