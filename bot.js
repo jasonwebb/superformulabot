@@ -20,11 +20,17 @@ winston.loggers.add('transports', {
 });
 
 // Variables for working with Processing sketch
-var processingPath = 'processing_3.3.6_linux64/processing-java';
-// var processingPath = '"processing_3.3.6_win64/processing-java.exe"';
-// var sketchPath = '/superformula_generator_sketch';   // Windows 10 location
-var sketchPath = '/home/ubuntu/superformula_generator_sketch';  // Ubuntu AWS EC2
-var outputImagePath = '/home/ubuntu/superformula_generator_sketch/superformula_output.jpg';
+var processingPathWin   = '"processing_3.3.6_win64/processing-java.exe"';
+var processingPathLinux = 'processing_3.3.6_linux64/processing-java';
+var sketchPathWin   = 'superformula_generator_sketch';
+var sketchPathLinux = '/home/ubuntu/superformula_generator_sketch';
+var outputImagePathWin   = sketchPathWin + '/superformula_output.jpg';
+var outputImagePathLinux = '/home/ubuntu/superformula_generator_sketch/superformula_output.jpg';
+
+var processingPath  = processingPathLinux;
+var sketchPath      = sketchPathLinux;
+var outputImagePath = outputImagePathLinux;
+
 var params = {};
 var paramDefaults = require('./param-defaults.js');
 var paramLimits = require('./param-limits.js');
@@ -39,6 +45,7 @@ Number.prototype.map = function (in_min, in_max, out_min, out_max) {
 //====================================================================================================
 //  TRIGGERS
 //====================================================================================================
+
 // Manually kickoff a new tweet at startup
 tweeter('DATE');
 
@@ -46,8 +53,10 @@ tweeter('DATE');
 stream = T.stream('user');
 stream.on('tweet', captureTweet);
 
-// Tweet a new image randomly once per hour
-// setInterval(tweeter('DATE'), 1000*60*60);
+// Schedule a DATE tweet for one hour from now, +/- 15 minutes
+var scheduledTime = scheduleTweet();
+winston.info('SCHEDULED tweet for ' + scheduledTime/60/1000 + ' minutes from now.');
+
 //====================================================================================================
 
 
@@ -59,6 +68,7 @@ function tweeter(mode) {
     // Obtain parameters either based on current datetime or Tweet
     switch(mode) {
         case 'DATE':
+        case 'INTERVAL':
             params = getParamsFromDate();
             break;
         case 'REPLY':
@@ -95,6 +105,7 @@ function tweeter(mode) {
         // Create appropriate status text
         switch(mode) {
             case 'DATE':
+            case 'INTERVAL':
                 status = paramString;
                 break;
             case 'REPLY':
@@ -132,6 +143,11 @@ function tweeter(mode) {
                         } else if(mode == 'REPLY') {
                             winston.info('REPLY sent to @' + tweet.user.screen_name + ' - ' + paramString)
                         }
+
+                        if(mode == 'INTERVAL') {
+                            var scheduledTime = scheduleTweet();
+                            winston.info('SCHEDULED tweet for ' + scheduledTime/60/1000 + ' minutes from now.');
+                        }
                     });
                 }
             });
@@ -150,13 +166,14 @@ function getParamsFromDate() {
     var day    = today.getDate();       // [0-6] + 1
     var month  = today.getMonth();      // [0-11] + 1
     var year   = today.getFullYear();   // [1000-9999]
-    var hour   = today.getHours();      // [0-23]
+    var hour   = today.getHours() + 6;      // [0-23]
     var minute = today.getMinutes();    // [0-59]
     var second = today.getSeconds();    // [0-59]
 
     params.a  = day.map(1, 31, paramLimits.a.min, paramLimits.a.max).toFixed(2);
-    params.b  = month.map(0, 11, paramLimits.b.min, paramLimits.b.max).toFixed(2);
-    params.m  = hour.map(0, 59, paramLimits.m.min, paramLimits.m.max).toFixed(2);
+    params.b = params.a;
+    // params.b  = month.map(0, 11, paramLimits.b.min, paramLimits.b.max).toFixed(2);
+    params.m  = hour.map(0, 23, paramLimits.m.min, paramLimits.m.max).toFixed(2);
     params.n1 = hour.map(0, 23, paramLimits.n1.min, paramLimits.n1.max).toFixed(2);
     params.n2 = minute.map(0, 59, paramLimits.n2.min, paramLimits.n2.max).toFixed(2);
     params.n3 = second.map(0, 59, paramLimits.n3.min, paramLimits.n3.max).toFixed(2);
@@ -314,7 +331,8 @@ function getParamsFromTweet() {
     // Empty [] string supplied, so generate randomized values
     } else if(!Array.isArray(userParamArray)) {
         userParams.a = random(paramLimits.a.min, paramLimits.a.max).toFixed(2);
-        userParams.b = random(paramLimits.b.min, paramLimits.b.max).toFixed(2);
+        userParams.b = userParams.a;
+        // userParams.b = random(paramLimits.b.min, paramLimits.b.max).toFixed(2);
         userParams.m = random(paramLimits.m.min, paramLimits.m.max).toFixed(2);
         userParams.n1 = random(paramLimits.n1.min, paramLimits.n1.max).toFixed(2);
         userParams.n2 = random(paramLimits.n2.min, paramLimits.n2.max).toFixed(2);
@@ -335,4 +353,17 @@ function getParamsFromTweet() {
 // Small utility function to generate random within range, a la Processing
 function random(min, max) {
     return Math.random() * (max-min) + min
+}
+
+function clamp(input, min, max) {
+    return Math.min(Math.max(input,max),max);
+}
+
+function scheduleTweet() {
+    var ONE_HOUR = 1000*60*60;
+    var timeOffset = ONE_HOUR + 1000*60*parseInt(random(-15,15));  // between -15 and 15 minutes
+
+    setInterval(tweeter, timeOffset, 'INTERVAL');   // run the script every hour within 15 minutes (+/-)
+
+    return timeOffset;
 }
