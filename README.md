@@ -1,6 +1,6 @@
     Bot is currently OFFLINE while initial development is being done.
 
-__[@superformulabot](https://twitter.com/superformulabot)__ is a generative art Twitter bot by [Jason Webb](https://twitter.com/jasonwebb) that shares drawings created using the 2D [superformula](https://en.wikipedia.org/wiki/Superformula) equation.
+__[@superformulabot](https://twitter.com/superformulabot)__ is a generative art Twitter bot by [Jason Webb](https://twitter.com/jasonwebb) that shares drawings created using Johan Gielis' [superformula](https://en.wikipedia.org/wiki/Superformula) equation based on the implementation provided in the book [FORM+CODE](http://formandcode.com/code-examples/visualize-superformula).
 
 Every two hours (+/- up to 15min) a new drawing is automatically generated and tweeted out using parameters based on the current timestamp.
 
@@ -49,7 +49,7 @@ Each of the parameters have distinct effects on the resulting drawing, as descri
 | `@superformulabot [a:3.0 m:5 n2:3]` | All parameters not provided are randomized (except invert) |
 | `@superformulabot []` or `@superformulabot [scwifty]` | All parameters are randomized (except invert) |
 
-## Continuous running with forever
+## Running continuously with forever
 This script is run continuously on an EC2 instance using forever, invoked like so:
 
     forever -o activity.log -e error.log -c "npm run deploy" start bot.js
@@ -71,7 +71,9 @@ And stop the script using:
 * [Amazon EC2](https://aws.amazon.com/ec2/)
 
 ## References
-* [Daniel Shiffman's Programming A-Z course](http://shiffman.net/a2z/twitter-bots/)
+* [Twitter API and Twitter Bots lesson](http://shiffman.net/a2z/twitter-bots/) from [Daniel Shiffman's Programming A-Z course](http://shiffman.net/a2z/)
+* [Coding Challenge #23: 2D Supershapes](https://www.youtube.com/watch?v=ksRoh-10lak) by Dan Shiffman
+* [Superformula implementation in Processing](http://formandcode.com/code-examples/visualize-superformula) from FORM+CODE
 * [Running Processing without a display wiki page](https://github.com/processing/processing/wiki/Running-without-a-Display)
 * [Scott Spencer's Twitter Bot Playground guide](https://spences10.gitbooks.io/twitter-bot-playground/content/)
 * [Paul Bourke's article on effects of superformula parameters](http://paulbourke.net/geometry/supershape/)
