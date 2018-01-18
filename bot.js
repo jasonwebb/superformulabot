@@ -75,8 +75,8 @@ stream = T.stream('user');
 stream.on('tweet', captureTweet);
 
 // Schedule a DATE tweet for one hour from now, +/- 15 minutes
-var scheduledTime = scheduleTweet();
-winston.info('SCHEDULED tweet for ' + scheduledTime/60/1000 + ' minutes from now.');
+scheduleTweet();
+
 //====================================================================================================
 
 
@@ -168,9 +168,9 @@ function tweeter(mode) {
                             winston.info('REPLY sent to @' + tweet.user.screen_name + ' - ' + paramString)
                         }
 
+                        // Reset timeout to random interval
                         if(mode == 'INTERVAL') {
-                            var scheduledTime = scheduleTweet();
-                            winston.info('SCHEDULED tweet for ' + scheduledTime/60/1000 + ' minutes from now.');
+                            scheduleTweet();
                         }
                     });
                 }
@@ -384,11 +384,13 @@ function getParamsFromTweet() {
 //=========================================================================
 function scheduleTweet() {
     var ONE_HOUR = 1000*60*60;
-    var timeOffset = ONE_HOUR + 1000*60*parseInt(random(-15,15));
+    var secondOffset = 1000 * parseInt(random(-60,60));           // +/- up to 60s
+    var minuteOffset = 1000 * 60 * parseInt(random(-15,15));      // +/- up to 15min
+    var timeOffset = ONE_HOUR + minuteOffset + secondOffset;
 
     setTimeout(tweeter, timeOffset, 'INTERVAL');
 
-    return timeOffset;
+    winston.info('SCHEDULED tweet for ' + (ONE_HOUR + minuteOffset)/60/1000 + ' minutes and ' + secondOffset/1000 + ' seconds from now.');
 }
 
 
