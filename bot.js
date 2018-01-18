@@ -74,7 +74,7 @@ tweeter('DATE');
 stream = T.stream('user');
 stream.on('tweet', captureTweet);
 
-// Schedule a DATE tweet for one hour from now, +/- 15 minutes
+// Schedule a DATE tweet for the future
 scheduleTweet();
 
 //====================================================================================================
@@ -130,7 +130,7 @@ function tweeter(mode) {
         switch(mode) {
             case 'DATE':
             case 'INTERVAL':
-                status = today.format('MMM Qo YYYY') + ' at ' + today.format('h:mm:ss A z') + '\n' + paramString;
+                status = today.format('MMM Qo, YYYY') + ' at ' + today.format('h:mm:ss A z') + '\n' + paramString;
                 break;
             case 'REPLY':
                 status = '@' + tweet.user.screen_name + ' ' + paramString;
@@ -320,8 +320,8 @@ function getParamsFromTweet() {
         userParamArray[0] = userParamString;
     }
 
+    // Process all provided parameters
     if(Array.isArray(userParamArray) && userParamArray.length > 0) {
-        // Split key/value pairs and capture them in userParams object
         userParamArray.forEach(paramToken => {
             var paramPair = paramToken.split(':');
 
@@ -358,6 +358,7 @@ function getParamsFromTweet() {
         });
     }
 
+    // Generate random paramters
     var randomParams = {};
     randomParams.a = random(paramLimits.a.min, paramLimits.a.max).toFixed(2);
     randomParams.b = random(paramLimits.b.min, paramLimits.b.max).toFixed(2);
@@ -373,24 +374,28 @@ function getParamsFromTweet() {
         randomParams.m += 1;
     }
 
-    // Merge defaults with any users' params (or randomized params)
+    // Ensure that m is not 0
+    if(randomParams.m == 0) {
+        randomParams.m = 2;
+    }
+
+    // Merge any user params with randomized params
     var params = Object.assign({}, randomParams, userParams);
 
     return params;
 }
 
 //=========================================================================
-//  Schedule a new tweet in about an hour (+/- 15min)
+//  Schedule a new tweet in about two hours (+/- 15min)
 //=========================================================================
 function scheduleTweet() {
-    var ONE_HOUR = 1000*60*60;
-    var secondOffset = 1000 * parseInt(random(-60,60));           // +/- up to 60s
-    var minuteOffset = 1000 * 60 * parseInt(random(-15,15));      // +/- up to 15min
-    var timeOffset = ONE_HOUR + minuteOffset + secondOffset;
+    var timeOffset = 1000*60*60*2;                       // two hours
+    timeOffset += 1000 * parseInt(random(-60,60));       // +/- up to 60s
+    timeOffset += 1000 * 60 * parseInt(random(-15,15));  // +/- up to 15min
 
     setTimeout(tweeter, timeOffset, 'INTERVAL');
 
-    winston.info('SCHEDULED tweet for ' + (ONE_HOUR + minuteOffset)/60/1000 + ' minutes and ' + secondOffset/1000 + ' seconds from now.');
+    winston.info('SCHEDULED tweet for ' + (timeOffset/60/1000).toFixed(2) + ' minutes from now.');
 }
 
 
