@@ -130,7 +130,7 @@ function tweeter(mode) {
         switch(mode) {
             case 'DATE':
             case 'INTERVAL':
-                status = today.format('MMM Qo, YYYY') + ' at ' + today.format('h:mm:ss A z') + '\n' + paramString;
+                status = today.format('MMM Do, YYYY') + ' at ' + today.format('h:mm:ss A z') + '\n' + paramString;
                 break;
             case 'REPLY':
                 status = '@' + tweet.user.screen_name + ' ' + paramString;
