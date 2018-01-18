@@ -16,6 +16,8 @@
   },
   "license": "ISC",
   "dependencies": {
+    "moment": "^2.20.1",
+    "moment-timezone": "^0.5.14",
     "twit": "^2.2.9",
     "winston": "^2.4.0"
   }

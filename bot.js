@@ -8,6 +8,10 @@ var tweet;
 var fs = require('fs');
 var exec = require('child_process').exec;
 
+// Datetime package to compensate for unpredictable server location
+var moment = require('moment-timezone');
+var today;
+
 // Environment-specific path variables
 var paths = {
     'processing': {
@@ -126,7 +130,7 @@ function tweeter(mode) {
         switch(mode) {
             case 'DATE':
             case 'INTERVAL':
-                status = paramString;
+                status = today.format('MMM Qo YYYY') + ' at ' + today.format('h:mm:ss A z') + '\n' + paramString;
                 break;
             case 'REPLY':
                 status = '@' + tweet.user.screen_name + ' ' + paramString;
@@ -182,17 +186,18 @@ function tweeter(mode) {
 function getParamsFromDate() {
     var params = {};
 
-    var today  = new Date();
-    var day    = today.getDate();       // [0-6] + 1
-    var month  = today.getMonth();      // [0-11] + 1
-    var year   = today.getFullYear();   // [1000-9999]
-    var hour   = today.getHours() + 6;      // [0-23]
-    var minute = today.getMinutes();    // [0-59]
-    var second = today.getSeconds();    // [0-59]
+    today      = moment().tz('America/Chicago');
+    var day    = today.date();      // [0-6]
+    var week   = today.week();      // [0-51]
+    var month  = today.month();     // [0-11]
+    var year   = today.year();      // [1000-9999]
+    var hour   = today.hour();      // [0-23]
+    var minute = today.minute();    // [0-59]
+    var second = today.second();    // [0-59]
 
     params.a  = day.map(1, 31, paramLimits.a.min, paramLimits.a.max).toFixed(2);
-    params.b  = month.map(0, 11, paramLimits.b.min, paramLimits.b.max).toFixed(2);
-    params.m  = parseInt(hour.map(0, 23, paramLimits.m.min, paramLimits.m.max));
+    params.b  = week.map(0, 51, paramLimits.b.min, paramLimits.b.max).toFixed(2);
+    params.m  = parseInt(minute.map(0, 59, paramLimits.m.min, paramLimits.m.max));
     params.n1 = hour.map(0, 23, paramLimits.n1.min, paramLimits.n1.max).toFixed(2);
     params.n2 = minute.map(0, 59, paramLimits.n2.min, paramLimits.n2.max).toFixed(2);
     params.n3 = second.map(0, 59, paramLimits.n3.min, paramLimits.n3.max).toFixed(2);
