@@ -1,4 +1,4 @@
-    Bot is currently OFFLINE while initial development is being done.
+    Bot is currently ONLINE!
 
 __[@superformulabot](https://twitter.com/superformulabot)__ is a generative art Twitter bot by [Jason Webb](https://twitter.com/jasonwebb) that shares drawings created using Johan Gielis' [superformula](https://en.wikipedia.org/wiki/Superformula) equation based on the implementation provided in the book [FORM+CODE](http://formandcode.com/code-examples/visualize-superformula).
 
