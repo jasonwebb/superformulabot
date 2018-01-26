@@ -60,7 +60,15 @@ Number.prototype.map = function (in_min, in_max, out_min, out_max) {
 
 // Add a 'clamp' (constrain) function to the Number prototype
 Number.prototype.clamp = function(min, max) {
-    return Math.min(Math.max(this,max),max);
+    var val = this;
+
+    if(this > max) {
+        val = max;
+    } else if(this < min) {
+        val = min;
+    }
+
+    return val;
 }
 
 
@@ -162,7 +170,7 @@ function tweeter(mode) {
 
                     // Post status update with media attached
                     T.post('statuses/update', status_params, function(err, data, response) {
-                        if(mode == 'DATE') {
+                        if(mode == 'DATE' || mode == 'INTERVAL') {
                             winston.info('DATE tweet posted - ' + paramString);
                         } else if(mode == 'REPLY') {
                             winston.info('REPLY sent to @' + tweet.user.screen_name + ' - ' + paramString)
@@ -195,8 +203,12 @@ function getParamsFromDate() {
     var minute = today.minute();    // [0-59]
     var second = today.second();    // [0-59]
 
-    params.a  = day.map(1, 31, paramLimits.a.min, paramLimits.a.max).toFixed(2);
-    params.b  = week.map(0, 51, paramLimits.b.min, paramLimits.b.max).toFixed(2);
+    params.a = Number((day.map(1, 31, paramLimits.a.min, (paramLimits.a.max - paramLimits.a.min)/2) +
+                minute.map(0, 59, -(paramLimits.a.max - paramLimits.a.min)/2, (paramLimits.a.max - paramLimits.a.min)/2))
+               .clamp(paramLimits.a.min, paramLimits.a.max).toFixed(2));
+    params.b = Number((day.map(1, 31, paramLimits.b.min, (paramLimits.b.max - paramLimits.b.min)/2) +
+               second.map(0, 59, -(paramLimits.b.max - paramLimits.b.min)/2, (paramLimits.b.max - paramLimits.b.min)/2))
+               .clamp(paramLimits.b.min, paramLimits.b.max).toFixed(2));
     params.m  = parseInt(minute.map(0, 59, paramLimits.m.min, paramLimits.m.max));
     params.n1 = hour.map(0, 23, paramLimits.n1.min, paramLimits.n1.max).toFixed(2);
     params.n2 = minute.map(0, 59, paramLimits.n2.min, paramLimits.n2.max).toFixed(2);
