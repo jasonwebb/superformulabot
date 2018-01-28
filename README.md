@@ -6,7 +6,7 @@ Every two hours (+/- up to 15min) a new drawing is automatically generated and t
 
 Anyone can request a specific drawing be made for them by @mentioning the bot with a message containing a set of parameters (see [Usage](#usage) and [About the parameters](#about-the-parameters)). The bot will generate a new drawing using the provided parameters, using randomized values for any that are not provided, then reply to the user with the drawing.
 
-If you'd like to play around with the superformula in real-time and see the effects of all the parameters, check out this interactive [Superformula Explorer](https://bl.ocks.org/mbostock/1021103) by Mike Bostock/Christophe Viau.
+If you'd like to play around with the superformula in real-time and see the effects of all the parameters, try out my interactive web app [SuperformulaSVG](https://jasonwebb.github.io/SuperformulaSVG-for-web/).
 
 ## Usage 
 To request a custom drawing from the bot, __@mention__ it in a tweet containing a list of parameters in the format of `[... {key}:{value} ...]`. For example:
