@@ -403,7 +403,7 @@ function getParamsFromTweet() {
 function scheduleTweet() {
     var timeOffset = 1000*60*60*2;                       // two hours
     timeOffset += 1000 * parseInt(random(-60,60));       // +/- up to 60s
-    timeOffset += 1000 * 60 * parseInt(random(-15,15));  // +/- up to 15min
+    timeOffset += 1000 * 60 * parseInt(random(0,60));    // + up to 60min
 
     setTimeout(tweeter, timeOffset, 'INTERVAL');
 
